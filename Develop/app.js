@@ -5,14 +5,61 @@ const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 
-const OUTPUT_DIR = path.resolve(__dirname, "output");
-const outputPath = path.join(OUTPUT_DIR, "team.html");
+// const OUTPUT_DIR = path.resolve(__dirname, "output");
+// const outputPath = path.join(OUTPUT_DIR, "team.html");
 
-const render = require("./lib/htmlRenderer");
+// const render = require("./lib/htmlRenderer");
 
+const employeeQuestions = [
+    {
+        type: "input",
+        message: "Enter the Employee's name: ",
+        name: "employeeName"
+    },
+    {
+        type: "input",
+        message: "Enter the Employee's ID number: ",
+        name: "employeeId"
+    },
+    {
+        type: "input",
+        message: "Enter the Employee's E-mail address: ",
+        name: "employeeEmail"
+    }
+]
+
+const introQuestions = [
+    {
+        type: "input",
+        message: "Enter the Manager's Name: ",
+        name: "managerName"
+    },
+    {
+        type: "input",
+        message: "Enter Employee's ID number: ",
+        name: "managerId"
+    },
+    {
+        type: "input",
+        message: "Enter the Employee's E-mail: ",
+        name: "managerEmail"
+    },
+    {
+        type: "input",
+        message: "How many Employee's do you want to Enter? ",
+        name: "employeeAmount"
+    }
+]
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
+inquirer.prompt(introQuestions).then(function(response) {
+    const {managerName, managerId, managerEmail, employeeAmount} = response;
+
+    
+    
+    promptEmployees(employeeAmount);
+})
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
@@ -33,3 +80,20 @@ const render = require("./lib/htmlRenderer");
 // for further information. Be sure to test out each class and verify it generates an
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
+
+
+async function promptEmployees(employeeAmount) {
+    let returnedEmployeeQuestions = [];
+    let employeeInt = parseInt(employeeAmount);
+    for (i = 0; i < employeeInt; i++) {
+        await inquirer.prompt(employeeQuestions).then(function(response) {
+
+            // console.log("This is working")
+            returnedEmployeeQuestions.push(response);
+            console.log(response)
+            console.log(returnedEmployeeQuestions)
+        })
+    }
+    //console.log(response[0])
+
+}
