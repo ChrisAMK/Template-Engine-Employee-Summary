@@ -63,13 +63,18 @@ const introQuestions = [
     },
     {
         type: "input",
-        message: "Enter Employee's ID number: ",
+        message: "Enter Manager's ID number: ",
         name: "managerId"
     },
     {
         type: "input",
-        message: "Enter the Employee's E-mail: ",
+        message: "Enter the Manager's E-mail: ",
         name: "managerEmail"
+    },
+    {
+        type: "input",
+        message: "Enter the Manager's Office Number: ",
+        name: "managerNumber"
     },
     {
         type: "input",
@@ -87,7 +92,10 @@ introPrompt()
 
 function introPrompt() {
     inquirer.prompt(introQuestions).then(async function(response) {
-        const {managerName, managerId, managerEmail, engineerAmount, internAmount} = response;
+        const {managerName, managerId, managerEmail, managerNumber, engineerAmount, internAmount} = response;
+
+        const managerArray = [];
+        managerArray[0] = new Manager(managerName, managerId, managerEmail, managerNumber);
 
         const promptedEngineerObjects = await promptEngineers(engineerAmount);
         const promptedInternObjects = await promptInterns(internAmount);
@@ -95,12 +103,9 @@ function introPrompt() {
         const generatedEngineerArray = await generateEngineers(promptedEngineerObjects);
         const generatedInternArray = await generateInterns(promptedInternObjects);
 
-        console.log(generatedEngineerArray);
-        console.log(generatedInternArray);
+        const employeeArray = managerArray.concat(generatedEngineerArray, generatedInternArray);
+        console.log(employeeArray);
 
-        
-
-        
     })
 }
 // Write code to use inquirer to gather information about the development team members,
