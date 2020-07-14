@@ -9,22 +9,49 @@ const fs = require("fs");
 // const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 // const render = require("./lib/htmlRenderer");
+const internQuestions = [
+    {
+        type: "input",
+        message: "Enter the intern's name: ",
+        name: "internName"
+    },
+    {
+        type: "input",
+        message: "Enter the intern's ID number: ",
+        name: "internId"
+    },
+    {
+        type: "input",
+        message: "Enter the intern's E-mail address: ",
+        name: "internEmail"
+    },
+    {
+        type: "input",
+        message: "Enter your School: ",
+        name: "internSchool"
+    }
+]
 
-const employeeQuestions = [
+const engineerQuestions = [
     {
         type: "input",
-        message: "Enter the Employee's name: ",
-        name: "employeeName"
+        message: "Enter the Engineer's name: ",
+        name: "engineerName"
     },
     {
         type: "input",
-        message: "Enter the Employee's ID number: ",
-        name: "employeeId"
+        message: "Enter the Engineer's ID number: ",
+        name: "engineerId"
     },
     {
         type: "input",
-        message: "Enter the Employee's E-mail address: ",
-        name: "employeeEmail"
+        message: "Enter the Engineer's E-mail address: ",
+        name: "engineerEmail"
+    },
+    {
+        type: "input",
+        message: "Enter your Github Account: ",
+        name: "engineerGithub"
     }
 ]
 
@@ -46,20 +73,39 @@ const introQuestions = [
     },
     {
         type: "input",
-        message: "How many Employee's do you want to Enter? ",
-        name: "employeeAmount"
+        message: "How many Engineers are on the team? ",
+        name: "engineerAmount"
+    },
+    {
+        type: "input",
+        message: "how many Interns are on the team? ",
+        name: "internAmount"
     }
 ]
 
+introPrompt()
+
+function introPrompt() {
+    inquirer.prompt(introQuestions).then(async function(response) {
+        const {managerName, managerId, managerEmail, engineerAmount, internAmount} = response;
+
+        const promptedEngineerObjects = await promptEngineers(engineerAmount);
+        const promptedInternObjects = await promptInterns(internAmount);
+
+        const generatedEngineerArray = await generateEngineers(promptedEngineerObjects);
+        const generatedInternArray = await generateInterns(promptedInternObjects);
+
+        console.log(generatedEngineerArray);
+        console.log(generatedInternArray);
+
+        
+
+        
+    })
+}
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
-inquirer.prompt(introQuestions).then(function(response) {
-    const {managerName, managerId, managerEmail, employeeAmount} = response;
 
-    
-    
-    promptEmployees(employeeAmount);
-})
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
@@ -81,19 +127,45 @@ inquirer.prompt(introQuestions).then(function(response) {
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
 
+// This function is taking in the amount of Engineers entered and looping for each
+async function promptEngineers(engineerAmount) {
+    let engineersArray = [];
+    let engineerInt = parseInt(engineerAmount);
+    for (i = 0; i < engineerInt; i++) {
+        await inquirer.prompt(engineerQuestions).then(function(response) {
 
-async function promptEmployees(employeeAmount) {
-    let returnedEmployeeQuestions = [];
-    let employeeInt = parseInt(employeeAmount);
-    for (i = 0; i < employeeInt; i++) {
-        await inquirer.prompt(employeeQuestions).then(function(response) {
-
-            // console.log("This is working")
-            returnedEmployeeQuestions.push(response);
-            console.log(response)
-            console.log(returnedEmployeeQuestions)
+            engineersArray.push(response);
         })
     }
-    //console.log(response[0])
 
+    return engineersArray
+}
+
+async function promptInterns(internAmount) {
+    let internArray = [];
+    internInt = parseInt(internAmount);
+    for (i = 0; i < internInt; i++) {
+        await inquirer.prompt(internQuestions).then(function(response){
+            internArray.push(response);
+        })
+    }
+    return internArray;
+}
+
+function generateEngineers(promptedEngineerObjects) {
+    let generatedEngineerArray = [];
+    for (i = 0; i < promptedEngineerObjects.length; i++) {
+        // Generating an array of all new Engineer Classes
+        generatedEngineerArray[i] = new Engineer(promptedEngineerObjects[i].engineerName, promptedEngineerObjects[i].engineerId, promptedEngineerObjects[i].engineerEmail, promptedEngineerObjects[i].engineerGithub)
+    }
+    return generatedEngineerArray;
+}
+
+function generateInterns(promptedInternObjects) {
+    let generatedInternArray = [];
+    for (i = 0; i < promptedInternObjects.length; i++) {
+        // Generating an array of all new Intern Classes
+        generatedInternArray[i] = new Intern(promptedInternObjects[i].internName, promptedInternObjects[i].internId, promptedInternObjects[i].internEmail, promptedInternObjects[i].internSchool)
+    }
+    return generatedInternArray;
 }
