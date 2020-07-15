@@ -4,88 +4,13 @@ const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const fs = require("fs");
-
+const questions = require("./lib/questions")
 const render = require("./lib/htmlRenderer");
 
 // Array of object questions for the inquirer Prompts
-const internQuestions = [
-    {
-        type: "input",
-        message: "Enter the intern's name: ",
-        name: "internName"
-    },
-    {
-        type: "input",
-        message: "Enter the intern's ID number: ",
-        name: "internId"
-    },
-    {
-        type: "input",
-        message: "Enter the intern's E-mail address: ",
-        name: "internEmail"
-    },
-    {
-        type: "input",
-        message: "Enter your School: ",
-        name: "internSchool"
-    }
-]
-
-const engineerQuestions = [
-    {
-        type: "input",
-        message: "Enter the Engineer's name: ",
-        name: "engineerName"
-    },
-    {
-        type: "input",
-        message: "Enter the Engineer's ID number: ",
-        name: "engineerId"
-    },
-    {
-        type: "input",
-        message: "Enter the Engineer's E-mail address: ",
-        name: "engineerEmail"
-    },
-    {
-        type: "input",
-        message: "Enter your Github Account: ",
-        name: "engineerGithub"
-    }
-]
-
-const introQuestions = [
-    {
-        type: "input",
-        message: "Enter the Manager's Name: ",
-        name: "managerName"
-    },
-    {
-        type: "input",
-        message: "Enter Manager's ID number: ",
-        name: "managerId"
-    },
-    {
-        type: "input",
-        message: "Enter the Manager's E-mail: ",
-        name: "managerEmail"
-    },
-    {
-        type: "input",
-        message: "Enter the Manager's Office Number: ",
-        name: "managerNumber"
-    },
-    {
-        type: "input",
-        message: "How many Engineers are on the team? ",
-        name: "engineerAmount"
-    },
-    {
-        type: "input",
-        message: "how many Interns are on the team? ",
-        name: "internAmount"
-    }
-]
+const internQuestions = questions.internQuestions;
+const engineerQuestions = questions.engineerQuestions;
+const introQuestions = questions.introQuestions;
 
 init()
 
@@ -122,29 +47,23 @@ function generateHTML(employeeArray) {
         }
     });
 }
-
 // This function is taking in the amount of Engineers entered and looping through so the user can enter Individual Information
 async function promptEngineers(engineerAmount) {
     let engineersArray = [];
-    let engineerInt = parseInt(engineerAmount);
-    for (i = 0; i < engineerInt; i++) {
+    for (i = 0; i < parseInt(engineerAmount); i++) {
         await inquirer.prompt(engineerQuestions).then(function(response) {
-
             engineersArray.push(response);
         })
-    }
-    return engineersArray
+    } return engineersArray
 }
 // Exactly the same as the promptEngineers function, also i should mention the array is then returned as a value
 async function promptInterns(internAmount) {
     let internArray = [];
-    internInt = parseInt(internAmount);
-    for (i = 0; i < internInt; i++) {
+    for (i = 0; i < parseInt(internAmount); i++) {
         await inquirer.prompt(internQuestions).then(function(response){
             internArray.push(response);
         })
-    }
-    return internArray;
+    } return internArray;
 }
 // This function takes in the user input array and then generates actual engineer class objects with the given info, also returns an array
 function generateEngineers(promptedEngineerObjects) {
@@ -152,8 +71,7 @@ function generateEngineers(promptedEngineerObjects) {
     for (i = 0; i < promptedEngineerObjects.length; i++) {
         // Generating an array of all new Engineer Classes
         generatedEngineerArray[i] = new Engineer(promptedEngineerObjects[i].engineerName, promptedEngineerObjects[i].engineerId, promptedEngineerObjects[i].engineerEmail, promptedEngineerObjects[i].engineerGithub)
-    }
-    return generatedEngineerArray;
+    } return generatedEngineerArray;
 }
 // Same as above
 function generateInterns(promptedInternObjects) {
@@ -161,6 +79,5 @@ function generateInterns(promptedInternObjects) {
     for (i = 0; i < promptedInternObjects.length; i++) {
         // Generating an array of all new Intern Classes
         generatedInternArray[i] = new Intern(promptedInternObjects[i].internName, promptedInternObjects[i].internId, promptedInternObjects[i].internEmail, promptedInternObjects[i].internSchool)
-    }
-    return generatedInternArray;
+    } return generatedInternArray;
 }
